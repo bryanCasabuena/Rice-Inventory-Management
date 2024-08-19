@@ -6,6 +6,18 @@ from PyQt6.QtGui import QAction, QIcon, QIntValidator
 import sys
 import mysql.connector
 
+class DatabaseConnection():
+    def __init__(self, host = "localhost", user="root", password = "!Walalng28", database = "inventory"):
+        self.host = host
+        self.user = user
+        self.password = password
+        self.database = database
+        
+    def connect(self):
+        connection = mysql.connector.connect(host = self.host, user=self.user, password=self.password, database = self.database)
+        return connection
+        
+
 # Making of Main Window
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -31,8 +43,20 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.table)
         
     def load_data(self):
-        self.table
-
+        connection = DatabaseConnection().connect()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM  inventory")
+        result = cursor.fetchall()
+        self.table.setRowCount(0)                                                               # Resets the table and loads the data
+        for row_number, row_data in enumerate(result):
+            self.table.insertRow(row_number)                                                    #Use to insert an empty row to row number
+            #print(row_number)
+            #print(row_data)
+            for column_number, data in enumerate(row_data):                                     #Populate cells of that row with actual data
+                self.table.setItem(row_number, column_number, QTableWidgetItem(str(data)))      # Secify row and which column
+        connection.close()
+    
+    # Instatiate an insert dialogue box
     def insert(self):
         dialog = InsertDialog()
         dialog.exec()
@@ -82,7 +106,15 @@ class InsertDialog(QDialog):
         rice_quantity = self.quantity.text()
         rice_price = self.price.text() 
         
+        # Making SQL Connection and Inserting data
+        connection = DatabaseConnection().connect()
+        cursor = connection.cursor()
+        cursor.execute("Insert INTO inventory (name, quantity, price) VALUES (%s, %s, %s)", (rice, rice_price, rice_quantity))
 
+        connection.commit()
+        cursor.close()
+        connection.close()
+        main_window.load_data()
     
 
         
@@ -90,4 +122,5 @@ class InsertDialog(QDialog):
 app = QApplication(sys.argv)            
 main_window = MainWindow()
 main_window.show()
+main_window.load_data()
 sys.exit(app.exec())
