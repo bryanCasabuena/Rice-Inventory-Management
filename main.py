@@ -70,8 +70,21 @@ class InsertDialog(QDialog):
         layout.addWidget(self.price)
         
         # Add a submit Button
-        button = QPushButton()
-            
+        button = QPushButton("Submit")
+        button.clicked.connect(self.add_inventory)
+        layout.addWidget(button)
+        
+        self.setLayout(layout)
+
+    #Insert Add Inventory function
+    def add_inventory(self):
+        rice = self.rice_name.itemText(self.rice_name.currentIndex())
+        rice_quantity = self.quantity.text()
+        rice_price = self.price.text() 
+        
+
+    
+
         
 # Opening of app
 app = QApplication(sys.argv)            
