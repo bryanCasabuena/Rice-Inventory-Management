@@ -1,7 +1,8 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QVBoxLayout, QLabel, QGridLayout, QLineEdit, QWidget, QPushButton, QMainWindow, QTableWidget, \
     QTableWidgetItem, QDialog, QVBoxLayout, QComboBox, QToolBar, QStatusBar, QMessageBox
-from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtGui import QAction, QIcon, QIntValidator
+
 import sys
 import mysql.connector
 
@@ -46,7 +47,7 @@ class InsertDialog(QDialog):
         
         layout = QVBoxLayout()
         
-        #Add rice name comboBox
+        # Add rice name comboBox
         self.rice_name = QComboBox()
         rice = ["Pandoy", "Coco Pandan", "MCL", "Buco Pandan", "Sweet Jasmine Blue" \
             "Sweet Jasmine Yellow", "Laon"]
@@ -54,12 +55,23 @@ class InsertDialog(QDialog):
         layout.addWidget(self.rice_name)
         self.setLayout(layout)
         
-        #Add Quantity
+        # Add Quantity
         self.quantity = QLineEdit()
-        self.quantity.setPlaceholderText("Quanity")
+        self.quantity.setPlaceholderText("Enter Quanity")
+        int_validator = QIntValidator(0, 100,self)
+        self.quantity.setValidator(int_validator)
         layout.addWidget(self.quantity)
         
+        # Add Price
+        self.price = QLineEdit()
+        self.price.setPlaceholderText("Price in PHP")
+        int_validator = QIntValidator(0, 1000, self)
+        self.price.setValidator(int_validator)
+        layout.addWidget(self.price)
         
+        # Add a submit Button
+        button = QPushButton()
+            
         
 # Opening of app
 app = QApplication(sys.argv)            
