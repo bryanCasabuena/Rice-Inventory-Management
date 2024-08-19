@@ -16,6 +16,7 @@ class MainWindow(QMainWindow):
         help_menu_item = self.menuBar().addMenu("&Help")
         
         add_inventory_action = QAction("Add Rice", self)
+        add_inventory_action.triggered.connect(self.insert)
         file_menu_item.addAction(add_inventory_action)
         
         about_action = QAction("About", self)
@@ -31,6 +32,35 @@ class MainWindow(QMainWindow):
     def load_data(self):
         self.table
 
+    def insert(self):
+        dialog = InsertDialog()
+        dialog.exec()
+
+# Insert Dialog Box inserting data
+class InsertDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Insert Student Data")
+        self.setFixedWidth(300)
+        self.setFixedHeight(300)
+        
+        layout = QVBoxLayout()
+        
+        #Add rice name comboBox
+        self.rice_name = QComboBox()
+        rice = ["Pandoy", "Coco Pandan", "MCL", "Buco Pandan", "Sweet Jasmine Blue" \
+            "Sweet Jasmine Yellow", "Laon"]
+        self.rice_name.addItems(rice)
+        layout.addWidget(self.rice_name)
+        self.setLayout(layout)
+        
+        #Add Quantity
+        self.quantity = QLineEdit()
+        self.quantity.setPlaceholderText("Quanity")
+        layout.addWidget(self.quantity)
+        
+        
+        
 # Opening of app
 app = QApplication(sys.argv)            
 main_window = MainWindow()
